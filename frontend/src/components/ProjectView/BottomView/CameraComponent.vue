@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 export default {
   name: "CameraComponent",
   component: { FontAwesomeIcon },
-  method: {
+  methods: {
     camera() {
       console.log("Change camera animation")
     },

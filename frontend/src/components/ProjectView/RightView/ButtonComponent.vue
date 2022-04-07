@@ -14,6 +14,7 @@
 
 <script>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { mapState } from 'vuex';
 
 export default {
   name: "ButtonComponent",
@@ -21,13 +22,21 @@ export default {
   methods: {
     save() {
       console.log("Save a clip");
+      this.$store.commit("map/addViewState", this.lastViewState)
     },
     recover() {
       console.log("Recover the map");
     },
     play() {
       console.log("Play the video");
+      if (this.viewStates) return;
     },
+  },
+  computed: {
+    ...mapState('map',{
+      lastViewState: state => state.lastViewState,
+      viewStates: state => state.viewStates,
+    }),
   },
 };
 </script>

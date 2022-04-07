@@ -1,9 +1,9 @@
 <template>
   <div class="right-component">
     <header-component title="Map" />
-    <div class="map-container">
-    <map-component />
-    <button-component />
+    <div class="map-content">
+      <map-component />
+      <button-component />
     </div>
   </div>
 </template>
@@ -27,7 +27,7 @@ export default {
   border-radius: 5px;
   height: calc(100% - 10px);
 }
-.map-container {
+.map-content {
   height: calc(100% - 50px);
   width: 100%;
   display: flex;

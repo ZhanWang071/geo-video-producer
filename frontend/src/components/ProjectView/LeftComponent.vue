@@ -5,7 +5,7 @@
     v-model="activeName"
     class="demo-tabs"
   >
-    <el-tab-pane name="first">
+    <el-tab-pane name="data">
       <template #label>
         <span class="custom-tabs-label">
           <font-awesome-icon icon="fa-solid fa-upload" />
@@ -14,7 +14,7 @@
       </template>
       <data-import />
     </el-tab-pane>
-    <el-tab-pane name="second">
+    <el-tab-pane name="map">
       <template #label>
         <span class="custom-tabs-label">
           <font-awesome-icon icon="fa-solid fa-map-location-dot" />
@@ -23,7 +23,7 @@
       </template>
       <map-editor />
     </el-tab-pane>
-    <el-tab-pane name="third">
+    <el-tab-pane name="camera">
       <template #label>
         <span class="custom-tabs-label">
           <font-awesome-icon icon="fa-solid fa-camera" />
@@ -46,6 +46,11 @@ import CameraLibrary from './LeftView/CameraLibrary.vue';
 export default {
   components: { HeaderComponent, FontAwesomeIcon, DataImport, MapEditor, CameraLibrary },
   name: "LeftComponent",
+  data() {
+    return {
+      activeName: "data",
+    }
+  },
   methods: {},
   computed: {},
 };
