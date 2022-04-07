@@ -1,4 +1,5 @@
-# quick-web
+# Geo Video Producer
+A proof-of-concept system for my bachelor thesis at Fudan University (year 2022).
 
 ## Frontend
 
