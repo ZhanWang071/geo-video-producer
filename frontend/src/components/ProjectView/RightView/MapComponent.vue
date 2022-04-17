@@ -2,11 +2,10 @@
   <div class="map-container">
     <canvas id="deck-canvas" ref="deck"></canvas>
     <div id="map" ref="map"></div>
-    
   </div>
 </template>
 <script>
-import { Deck } from "@deck.gl/core";
+import { Deck, FlyToInterpolator } from "@deck.gl/core";
 import mapboxgl from "mapbox-gl";
 import { mapState } from 'vuex';
 
@@ -14,9 +13,6 @@ export default {
   name: "MapComponent",
   data() {
     return {
-      accessToken:
-        "pk.eyJ1Ijoid3o5ODY5NzA0MDYiLCJhIjoiY2wxbnN5cnc0MDB0ajNjcDkxYmdubGRvZiJ9.EpGZDuJfhf-knwGjkOzV1Q",
-      mapStyle: 'mapbox://styles/mapbox/light-v9',
       viewState: {
         latitude: 12.976387,
         longitude: 77.571529,
@@ -24,28 +20,27 @@ export default {
         bearing: 0,
         pitch: 0,
       },
+      flyTo: new FlyToInterpolator(),
     };
   },
   created() {
-    this.map = null;
-    this.deck = null;
   },
   methods: {},
   mounted() {
     // creating the map
-    this.map = new mapboxgl.Map({
+    const map = new mapboxgl.Map({
       accessToken: this.accessToken,
       container: this.$refs.map,
       interactive: false,
-      style:
-        this.mapStyle || "mapbox://styles/haxzie/ck7h838qb0bik1iofe0k2i3f2",
+      style: this.mapStyle,
       center: [this.viewState.longitude, this.viewState.latitude],
       zoom: this.viewState.zoom,
       pitch: this.viewState.pitch,
       bearing: this.viewState.bearing,
     });
+    this.$store.commit('map/initMap', map);
 
-    this.deck = new Deck({
+    const deck = new Deck({
       canvas: this.$refs.deck,
       width: "100%",
       height: "100%",
@@ -61,10 +56,27 @@ export default {
         this.$store.commit('map/changeLastViewState', viewState);
       },
     });
+    this.$store.commit('map/initDeck', deck);
+  },
+  watch: {
+    // viewStates() {
+    //   this.deck.setProps({
+    //     viewState: {
+    //       ...this.viewState,
+    //       transitionInterpolator: new FlyToInterpolator(),
+    //       transitionDuration: 2000,
+    //     }
+    //   })
+    // }
   },
   computed: {
     ...mapState('map',{
+      accessToken: state => state.accessToken,
+      mapStyle: state => state.mapStyle,
+
       viewStates: state => state.viewStates,
+      map: state => state.map,
+      deck: state => state.deck,
     }),
     layers() {
       return [ ];

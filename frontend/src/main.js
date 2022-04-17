@@ -6,9 +6,11 @@ import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/en'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faPlay, faArrowRotateLeft, faFolderPlus, faCamera, faUpload, faMapLocationDot } from "@fortawesome/free-solid-svg-icons";
+import { faPlay, faArrowRotateLeft, faFolderPlus, faCamera, 
+        faUpload, faMapLocationDot, faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
 
-library.add( faPlay, faArrowRotateLeft, faFolderPlus, faCamera, faUpload, faMapLocationDot )
+library.add( faPlay, faArrowRotateLeft, faFolderPlus, faCamera, faUpload, 
+            faMapLocationDot, faTrash, faXmark )
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false
