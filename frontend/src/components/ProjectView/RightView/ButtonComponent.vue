@@ -31,25 +31,35 @@ export default {
     recover() {
       console.log("Recover the map");
     },
-    play() {
+    async play() {
       console.log("Play the video");
       if (!this.viewStates) return;
-      for (let i in this.viewStates) {
-        setTimeout(() => {
-          console.log(i);
-          this.deck.setProps({
-            initialViewState: {
-              ...this.viewStates[i],
-              transitionInterpolator: new FlyToInterpolator(),
-              transitionDuration: 2000,
-            }
-          })
-        }, 2000)
+      
+      this.deck.setProps({
+        initialViewState: {
+          ...this.viewStates[this.viewStates.length-1],
+        }
+      })
+      await this.timeout(100);
+
+      for (var i=0; i < this.viewStates.length; i++) {
+        console.log(i,this.viewStates[i].longitude);
+        this.deck.setProps({
+          initialViewState: {
+            ...this.viewStates[i],
+            transitionInterpolator: new FlyToInterpolator(),
+            transitionDuration: i==0 ? 500 : 2000,
+          }
+        })
+        await this.timeout(2000)
       }
     },
     restart() {
       console.log("Restart")
       this.$store.commit("map/initViewState")
+    },
+    timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
     },
   },
   computed: {
