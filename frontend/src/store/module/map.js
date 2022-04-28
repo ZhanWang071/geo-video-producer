@@ -1,6 +1,6 @@
 const state = () => ({
   accessToken: "pk.eyJ1Ijoid3o5ODY5NzA0MDYiLCJhIjoiY2wxbnN5cnc0MDB0ajNjcDkxYmdubGRvZiJ9.EpGZDuJfhf-knwGjkOzV1Q",
-  mapStyle: 'mapbox://styles/mapbox/light-v9',  
+  mapStyle: 'mapbox://styles/mapbox/dark-v10',  
   
   map: null,
   deck: null,
@@ -18,6 +18,10 @@ const mutations = {
   initMap(state, map) {
     state.map = map;
   },
+  updateMapStyle(state, style){
+    state.mapStyle = style;
+    state.map.setStyle(state.mapStyle);
+  },
   initDeck(state, deck) {
     state.deck = deck;
   },
@@ -34,16 +38,6 @@ const mutations = {
   changeLastViewState(state, viewState) {
     state.lastViewState = viewState;
   },
-  
-//   viewStateTransition(state, viewState) {
-//     state.deck.setProps({
-//       initialViewState: {
-//         ...viewState,
-//         transitionInterpolator: new FlyToInterpolator(),
-//         transitionDuration: 2000,
-//       }
-//     })
-//   },
 }
 
 export default {

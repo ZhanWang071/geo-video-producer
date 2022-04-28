@@ -33,20 +33,19 @@ export default {
     },
     async play() {
       console.log("Play the video");
-      if (!this.viewStates) return;
-      
+      if (!this.updatedStates) return;
+
       this.deck.setProps({
         initialViewState: {
-          ...this.viewStates[this.viewStates.length-1],
+          ...this.updatedStates[this.updatedStates.length-1],
         }
       })
       await this.timeout(100);
 
-      for (var i=0; i < this.viewStates.length; i++) {
-        console.log(i,this.viewStates[i].longitude);
+      for (var i=0; i < this.updatedStates.length; i++) {
         this.deck.setProps({
           initialViewState: {
-            ...this.viewStates[i],
+            ...this.updatedStates[i],
             transitionInterpolator: new FlyToInterpolator(),
             transitionDuration: i==0 ? 500 : 2000,
           }
@@ -67,7 +66,11 @@ export default {
       deck: state => state.deck,
       lastViewState: state => state.lastViewState,
       viewStates: state => state.viewStates,
+      removedClips: state => state.removedClips,
     }),
+    updatedStates() {
+      return this.viewStates.filter((_, index)=>!this.removedClips.includes(index))
+    }
   },
 };
 </script>
