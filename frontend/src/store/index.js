@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import test from './module/test';
 import map from './module/map';
 import heatmap from './module/heatmap';
+import scatterplot from './module/scatterplot';
 
 Vue.use(Vuex)
 
@@ -13,6 +14,7 @@ export default new Vuex.Store({
     test,
     map,
     heatmap,
+    scatterplot
   },
   // strict: debug,
   strict: false,

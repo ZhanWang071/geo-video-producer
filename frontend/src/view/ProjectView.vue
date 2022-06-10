@@ -60,7 +60,7 @@ export default {
 .header-text {
   margin-left: 10px;
   font-size: 1.6em;
-  color: rgb(255, 255, 255);
+  color: #ffffff;
 }
 .content-container {
   height: 800px;

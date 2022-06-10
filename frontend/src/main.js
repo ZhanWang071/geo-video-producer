@@ -7,10 +7,10 @@ import locale from 'element-ui/lib/locale/lang/en'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faPlay, faArrowRotateLeft, faFolderPlus, faCamera, 
-        faUpload, faMapLocationDot, faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
+        faUpload, faMapLocationDot, faTrash, faXmark, faFileText } from "@fortawesome/free-solid-svg-icons";
 
 library.add( faPlay, faArrowRotateLeft, faFolderPlus, faCamera, faUpload, 
-            faMapLocationDot, faTrash, faXmark )
+            faMapLocationDot, faTrash, faXmark, faFileText )
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false

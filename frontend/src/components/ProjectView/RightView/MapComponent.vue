@@ -2,26 +2,28 @@
   <div class="map-container">
     <canvas id="deck-canvas" ref="deck"></canvas>
     <div id="map" ref="map"></div>
+
+    <div class="narration" v-if="narrationVisible">
+      <span>{{ narration }}</span>
+    </div>
   </div>
 </template>
 <script>
 import { Deck, FlyToInterpolator } from "@deck.gl/core";
 import mapboxgl from "mapbox-gl";
-import { mapState } from 'vuex';
-// import { HeatmapLayer } from '@deck.gl/aggregation-layers';
-import {ScatterplotLayer} from '@deck.gl/layers';
-import json from '@/assets/global_terrorism.json'
-import {MapboxLayer} from '@deck.gl/mapbox';
+import { mapState } from "vuex";
+import { ScatterplotLayer } from "@deck.gl/layers";
+import { MapboxLayer } from "@deck.gl/mapbox";
+import { color } from "d3-color";
 
 export default {
   name: "MapComponent",
   data() {
     return {
-      data: json,
       viewState: {
-        latitude: 12.976387,
-        longitude: 77.571529,
-        zoom: 4,
+        latitude: 11.29607090043459,
+        longitude: 5.148265647218573,
+        zoom: 1,
         bearing: 0,
         pitch: 0,
       },
@@ -30,6 +32,16 @@ export default {
   },
   methods: {
     initBaseMap() {
+      this.scatterPlotLayer = new MapboxLayer({
+        id: "scatter-plot",
+        type: ScatterplotLayer,
+        data: [],
+        radiusScale: 30,
+        radiusMinPixels: 0.25,
+        getPosition: (d) => [d.longitude, d.latitude, 0],
+        getFillColor: [254, 60, 0],
+        getRadius: 3,
+      });
       // creating the map
       const map = new mapboxgl.Map({
         accessToken: this.accessToken,
@@ -41,11 +53,13 @@ export default {
         pitch: this.viewState.pitch,
         bearing: this.viewState.bearing,
       });
-      map.on("load",()=>{
+      // map.on("style.load", () => {
+      //   map.addLayer(this.scatterPlotLayer);
+      // });
+      map.on("load", () => {
         map.addLayer(this.scatterPlotLayer);
-        }
-      )
-      this.$store.commit('map/initMap', map);
+      });
+      this.$store.commit("map/initMap", map);
     },
     initDeckCanvas() {
       const deck = new Deck({
@@ -61,65 +75,80 @@ export default {
             bearing: viewState.bearing,
             pitch: viewState.pitch,
           });
-          this.$store.commit('map/changeLastViewState', viewState);
+          this.$store.commit("map/changeLastViewState", viewState);
         },
       });
-      this.$store.commit('map/initDeck', deck);
+      this.$store.commit("map/initDeck", deck);
     },
   },
   mounted() {
     this.initBaseMap();
     this.initDeckCanvas();
   },
+  watch: {
+    data(newv) {
+      this.scatterPlotLayer.setProps({ data: newv });
+    },
+    radius(newv) {
+      this.scatterPlotLayer.setProps({ getRadius: newv / 2 });
+    },
+    scale(newv) {
+      this.scatterPlotLayer.setProps({ radiusScale: newv / 2 });
+    },
+    pixels(newv) {
+      this.scatterPlotLayer.setProps({ radiusMinPixels: newv / 100 });
+    },
+    color(newv) {
+      console.log("test", newv);
+      const hexcolor = color(newv);
+      this.scatterPlotLayer.setProps({
+        getFillColor: [hexcolor.r, hexcolor.g, hexcolor.b],
+      });
+    },
+  },
   computed: {
-    ...mapState('map',{
-      accessToken: state => state.accessToken,
-      mapStyle: state => state.mapStyle,
+    ...mapState("map", {
+      accessToken: (state) => state.accessToken,
+      mapStyle: (state) => state.mapStyle,
 
-      viewStates: state => state.viewStates,
-      map: state => state.map,
-      deck: state => state.deck,
+      viewStates: (state) => state.viewStates,
+      map: (state) => state.map,
+      deck: (state) => state.deck,
+
+      data: (state) => state.data,
+      narrationVisible: state => state.narrationVisible,
+      narration: state => state.narration,
     }),
-    ...mapState('heatmap',{
-      intensity: state => state.intensity,
-      radius: state => state.radius,
-      threshold: state => state.threshold,
+    ...mapState("scatterplot", {
+      radius: (state) => state.radius,
+      scale: (state) => state.scale,
+      pixels: (state) => state.pixels,
+      color: (state) => state.color,
     }),
-    scatterPlotLayer() {
-      return new MapboxLayer({
-        id: 'scatter-plot',
-        type: ScatterplotLayer,
-        data: this.data,
-        radiusScale: 30,
-        radiusMinPixels: 0.25,
-        getPosition: d => [d.longitude, d.latitude, 0],
-        getFillColor: d => [255, 255-d.counts*30, 0],
-        getRadius: 20,
-      })
-    },
-    layers() {
-      return [
-        // new HeatmapLayer({
-        //   data: this.data,
-        //   id: 'heatmp-layer',
-        //   pickable: false,
-        //   getPosition: d => [d.longitude, d.latitude],
-        //   getWeight: d => d.counts,
-        //   radiusPixels: this.radius,
-        //   intensity: this.intensity,
-        //   threshold: this.threshold,
-        // })
-        new ScatterplotLayer({
-          id: 'scatter-plot',
-          data: this.data,
-          radiusScale: 30,
-          radiusMinPixels: 0.25,
-          getPosition: d => [d.longitude, d.latitude, 0],
-          getFillColor: d => [255, 255-d.counts*30, 0],
-          getRadius: 20,
-        })
-      ];
-    },
+
+    // layers() {
+    //   return [
+    //     // new HeatmapLayer({
+    //     //   data: this.data,
+    //     //   id: 'heatmp-layer',
+    //     //   pickable: false,
+    //     //   getPosition: d => [d.longitude, d.latitude],
+    //     //   getWeight: d => d.counts,
+    //     //   radiusPixels: this.radius,
+    //     //   intensity: this.intensity,
+    //     //   threshold: this.threshold,
+    //     // })
+    //     new ScatterplotLayer({
+    //       id: 'scatter-plot',
+    //       data: this.data,
+    //       radiusScale: 30,
+    //       radiusMinPixels: 0.25,
+    //       getPosition: d => [d.longitude, d.latitude, 0],
+    //       getFillColor: d => [255, 255-d.counts*30, 0],
+    //       getRadius: 20,
+    //     })
+    //   ];
+    // },
   },
 };
 </script>
@@ -137,5 +166,17 @@ export default {
   width: 100%;
   height: 100%;
   float: left;
+}
+.narration {
+  font-size: 18px;
+  position: absolute;
+  margin-top: 46%;
+  color: white;
+  display: flex;
+  justify-content: center;
+  max-width: 80%;
+  margin-left: 10%;
+  text-align: center;
+
 }
 </style>

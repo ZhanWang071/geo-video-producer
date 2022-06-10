@@ -1,6 +1,6 @@
 <template>
   <div class="bottom-component">
-    <header-component title="Story Clips" />
+    <header-component title="Story Slides" />
     <div class="clip-sequence">
       <div class="clip"
         v-for="(value, index) in viewStates"

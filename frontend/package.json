@@ -18,6 +18,8 @@
     "@fortawesome/vue-fontawesome": "^2.0.6",
     "axios": "^0.24.0",
     "core-js": "^3.6.5",
+    "d3": "^7.4.4",
+    "d3-color": "^3.1.0",
     "element-ui": "^2.15.6",
     "mapbox-gl": "^2.7.1",
     "vue": "^2.6.11",
